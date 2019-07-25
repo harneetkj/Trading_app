@@ -4,7 +4,6 @@ import ca.jrvs.apps.trading.dao.MarketDataDao;
 import ca.jrvs.apps.trading.dao.QouteDao;
 import ca.jrvs.apps.trading.model.domain.IexQuote;
 import ca.jrvs.apps.trading.model.domain.Qoute;
-import org.hibernate.event.spi.SaveOrUpdateEvent;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -117,6 +116,7 @@ public class QouteService {
         return  qouteList;
     }
     public List<Qoute> getAllQuotes() {
+
         return qouteDao.FindAll();
     }
 
