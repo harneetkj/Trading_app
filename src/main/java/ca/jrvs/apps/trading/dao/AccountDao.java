@@ -6,10 +6,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
+import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
 
-
+@Repository
 public class AccountDao extends JdbcCrudDao<Account, Integer> {
     private static final Logger logger = LoggerFactory.getLogger(AccountDao.class);
     private final static String Table_name = "account";

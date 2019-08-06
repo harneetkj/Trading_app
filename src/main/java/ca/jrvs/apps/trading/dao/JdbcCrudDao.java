@@ -10,9 +10,7 @@ import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 
-import javax.persistence.Id;
-
-public abstract class JdbcCrudDao <E extends Entity, ID> implements CrudRepository<E, ID> {
+public abstract class JdbcCrudDao<E extends Entity, ID> implements CrudRepository<E, ID> {
     private static final Logger logger = LoggerFactory.getLogger(AccountDao.class);
 
     abstract public JdbcTemplate getJdbcTemplate();
@@ -59,18 +57,20 @@ public abstract class JdbcCrudDao <E extends Entity, ID> implements CrudReposito
         logger.info(Exist_SQL);
         Integer count = getJdbcTemplate().queryForObject(Exist_SQL,
                 Integer.class, id);
-         return count != 0;
-    }
-    @Override
-    public E deleteById(ID id) {
-         deleteById(getIdName(),id);
-         return null;
+        return count != 0;
     }
 
-    public void deleteById(String Idname, ID id){
-          String delete_query = "DELETE FROM"+ getTableName()+"WHERE " + Idname +" =?";
-          logger.info(delete_query);
-           getJdbcTemplate().update(delete_query, id);
+    @Override
+    public E deleteById(ID id) {
+        deleteById(getIdName(), id);
+        return null;
+    }
+
+    public boolean deleteById(String Idname, ID id) {
+        String delete_query = "DELETE FROM" + getTableName() + "WHERE " + Idname + " =?";
+        logger.info(delete_query);
+        getJdbcTemplate().update(delete_query, id);
+        return false;
     }
 
     public E findById(String idName, ID id, boolean forUpdate, Class clazz) {
@@ -84,13 +84,12 @@ public abstract class JdbcCrudDao <E extends Entity, ID> implements CrudReposito
 
         try {
             t = (E) getJdbcTemplate()
-                    .queryForObject(Sql_select,
-                            BeanPropertyRowMapper.newInstance(clazz), id);
+                    .queryForObject(Sql_select, BeanPropertyRowMapper.newInstance(clazz), id);
         } catch (EmptyResultDataAccessException e) {
             logger.debug("Can't find a entry with this id:" + id, e);
         }
-        if( t == null){
-                 System.out.println("Resource not found");
+        if (t == null) {
+            System.out.println("Resource not found");
 
         }
         return t;

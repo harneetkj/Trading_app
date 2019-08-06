@@ -12,7 +12,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
-
 import javax.sql.DataSource;
 
 import static org.springframework.util.StringUtils.isEmpty;
@@ -39,7 +38,7 @@ public class AppConfig {
     }
 
     @Bean
-    public DataSource DataSource(){
+    public DataSource DataSource() {
 
         String jdbcUrl;
         String user;
@@ -55,7 +54,7 @@ public class AppConfig {
             throw new IllegalArgumentException("Missing data source config env vars");
         }
 
-     BasicDataSource basicDataSource = new BasicDataSource();
+        BasicDataSource basicDataSource = new BasicDataSource();
         basicDataSource.setDriverClassName("org.postgresql.Driver");
         basicDataSource.setUrl(jdbcUrl);
         basicDataSource.setUsername(user);

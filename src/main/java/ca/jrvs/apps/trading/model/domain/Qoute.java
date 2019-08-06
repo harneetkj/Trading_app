@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.*;
 
 import java.util.HashMap;
 import java.util.Map;
+
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({
         "ticker",
@@ -16,16 +17,6 @@ import java.util.Map;
 })
 
 public class Qoute implements Entity<String> {
-    @Override
-    public String getID() {
-        return null;
-    }
-
-    @Override
-    public void setId(String s) {
-
-    }
-
     @JsonProperty("ticker")
     private String ticker;
     @JsonProperty("lastPrice")
@@ -42,6 +33,16 @@ public class Qoute implements Entity<String> {
     private String id;
     @JsonIgnore
     private Map<String, Object> additionalProperties = new HashMap<String, Object>();
+
+    @Override
+    public String getID() {
+        return null;
+    }
+
+    @Override
+    public void setId(String s) {
+
+    }
 
     @JsonProperty("ticker")
     public String getTicker() {

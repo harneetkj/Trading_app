@@ -1,10 +1,5 @@
 package ca.jrvs.apps.trading.dao;
 
-import java.io.IOException;
-import java.net.URISyntaxException;
-import java.util.Optional;
-import java.util.stream.Collectors;
-
 import ca.jrvs.apps.trading.model.config.MarketDataConfig;
 import ca.jrvs.apps.trading.model.domain.IexQuote;
 import org.apache.http.client.methods.CloseableHttpResponse;
@@ -19,18 +14,20 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataRetrievalFailureException;
 import org.springframework.stereotype.Repository;
 
-import java.net.URI;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Repository
 public class MarketDataDao {
 
+    private static final String BASE_URL = "https://cloud.iexapis.com/v1/stock/market/batch?types=quote";
+    private static final String ACCESS_TOKEN = System.getenv("TOKEN");
     private Logger logger = LoggerFactory.getLogger(MarketDataDao.class);
     private String BATCH_QUOTE_URL;
     private String URL_helper = "/stock/market/batch?symbols=%s&types=quote&token";
-    private static final String BASE_URL = "https://cloud.iexapis.com/v1/stock/market/batch?types=quote";
-    private static final String ACCESS_TOKEN = System.getenv("TOKEN");
     private HttpClientConnectionManager httpClientConnectionManager;
     private MarketDataConfig marketDataConfig;
 
@@ -54,27 +51,27 @@ public class MarketDataDao {
         }
 
     }
-        public IexQuote findIexQouteByticker(String ticker){
+
+    public IexQuote findIexQouteByticker(String ticker) {
         List<String> TickerList = new ArrayList<>();
         TickerList.add(ticker);
         List<IexQuote> qoute = findIexQouteByticker(TickerList);
         return qoute.get(0);
 
-        }
-        public List<IexQuote> findIexQouteByticker(List<String> tickerList)
-        {
+    }
 
-          String tickerListtoString = tickerList.stream().map(String::valueOf).collect(Collectors.joining(","));
-            ;
-            StringBuilder sb = new StringBuilder();
+    public List<IexQuote> findIexQouteByticker(List<String> tickerList) {
 
-            String stringUri = BASE_URL + "&token=" + ACCESS_TOKEN + "&symbols=" + tickerListtoString ;
-            String response = executeHttpGet(stringUri);
+        String tickerListtoString = tickerList.stream().map(String::valueOf).collect(Collectors.joining(","));
+        StringBuilder sb = new StringBuilder();
 
-            logger.info("get Uri" +stringUri);//
-            return null;
+        String stringUri = BASE_URL + "&token=" + ACCESS_TOKEN + "&symbols=" + tickerListtoString;
+        String response = executeHttpGet(stringUri);
 
-        }
+        logger.info("get Uri" + stringUri);//
+        return null;
+
+    }
 
     private String executeHttpGet(String stringUri) {
 
@@ -101,7 +98,7 @@ public class MarketDataDao {
             } catch (IOException e) {
                 throw new DataRetrievalFailureException("Unable Http execution error", e);
             }
-    }
+        }
 
 
     }
@@ -113,7 +110,7 @@ public class MarketDataDao {
                 .setConnectionManagerShared(true)
                 .build();
     }
-    }
+}
 
 
 

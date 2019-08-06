@@ -15,7 +15,7 @@ public class QouteService {
     private QouteDao qouteDao;
     private MarketDataDao marketDataDao;
 
-    public  QouteService(QouteDao qouteDao, MarketDataDao marketDataDao){
+    public QouteService(QouteDao qouteDao, MarketDataDao marketDataDao) {
        /* Creates a new QuoteService object which relies on a QuoteDao to store quotes and
      MarketDataDao to pull quotes from the Iex server */
         this.qouteDao = qouteDao;
@@ -29,15 +29,16 @@ public class QouteService {
      * @param ticker - stock symbol being retrieved
      * @return the IexQuote that matches the symbol passed, or null if it does not exists
      */
-    public IexQuote getIexQoute(String tickr){
+    public IexQuote getIexQoute(String tickr) {
         IexQuote iexQuote = marketDataDao.findIexQouteByticker(tickr);
-        if (iexQuote == null){
+        if (iexQuote == null) {
             System.out.println("Ticker not found");
 
         }
 
         return iexQuote;
     }
+
     /**
      * Adds a new quote to the daily list and stores it's current data in the database
      *
@@ -45,20 +46,20 @@ public class QouteService {
      * @return data of the quote stored in the database
      */
 
-    public Qoute AddToList(String tickr){
+    public Qoute AddToList(String tickr) {
 
-        if(tickr == ""){
-           throw new IllegalArgumentException("Empty ticker value");
+        if (tickr == "") {
+            throw new IllegalArgumentException("Empty ticker value");
         }
-        return InsertQoute(tickr,false);
+        return InsertQoute(tickr, false);
 
     }
 
-    public List<Qoute> AddtoList(List<String> tickrs){
-        if(tickrs.isEmpty()){
+    public List<Qoute> AddtoList(List<String> tickrs) {
+        if (tickrs.isEmpty()) {
             throw new IllegalArgumentException(" Empty tickr list");
         }
-        return InsertQoute(tickrs,false);
+        return InsertQoute(tickrs, false);
     }
 
     /**
@@ -68,59 +69,57 @@ public class QouteService {
      * @return data of the quotes stored in the database
      */
 
-    public Qoute UpdateList(String tickr){
+    public Qoute UpdateList(String tickr) {
 
-      return InsertQoute(tickr,true);
+        return InsertQoute(tickr, true);
 
     }
 
-    public List<Qoute> UpdateList(List<String> tickrs)
-    {
+    public List<Qoute> UpdateList(List<String> tickrs) {
         return InsertQoute(tickrs, true);
     }
 
-    public Qoute InsertQoute(String tickr, boolean Update)
-    {
+    public Qoute InsertQoute(String tickr, boolean Update) {
         List<String> tickers = new ArrayList<>();
         tickers.add(tickr);
-        List<Qoute> qoutes = InsertQoute(tickers,true);
+        List<Qoute> qoutes = InsertQoute(tickers, true);
 
         return qoutes.get(0);
     }
 
-    public List<Qoute> InsertQoute(List<String> tickrs, boolean Update){
+    public List<Qoute> InsertQoute(List<String> tickrs, boolean Update) {
         List<IexQuote> iexqoute = marketDataDao.findIexQouteByticker(tickrs);
         List<Qoute> qoutelist = IextoQuote(iexqoute);
 
         //if update is equal to true
-        if(Update== true){
+        if (Update == true) {
 
-            for ( Qoute q : qoutelist){
-                if(!qouteDao.existsById(q.getID())){
+            for (Qoute q : qoutelist) {
+                if (!qouteDao.existsById(q.getID())) {
                     qouteDao.create(q);
                 }
             }
         }
-    return qoutelist;
+        return qoutelist;
     }
 
     //* This method is used to iterate through the IexQouteList and each one is again sent to the IexQoute method *//
 
-    public List<Qoute> IextoQuote (List<IexQuote> iexQuote)
-    {
+    public List<Qoute> IextoQuote(List<IexQuote> iexQuote) {
         List<Qoute> qouteList = new ArrayList<>();
-        for (IexQuote q: iexQuote){
+        for (IexQuote q : iexQuote) {
 
             qouteList.add(IextoQuote(q));
         }
-        return  qouteList;
+        return qouteList;
     }
+
     public List<Qoute> getAllQuotes() {
 
         return qouteDao.FindAll();
     }
 
-    public Qoute IextoQuote (IexQuote q){
+    public Qoute IextoQuote(IexQuote q) {
         Qoute qoute = new Qoute();
         qoute.setAskPrice(Integer.parseInt(q.getIexAskPrice()));
         qoute.setAskSize(Integer.parseInt(q.getIexAskSize()));

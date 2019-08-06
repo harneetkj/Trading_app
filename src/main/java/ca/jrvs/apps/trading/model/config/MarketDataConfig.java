@@ -1,7 +1,5 @@
 package ca.jrvs.apps.trading.model.config;
 
-import jdk.internal.dynalink.beans.StaticClass;
-
 public class MarketDataConfig {
 
     public String Host;
@@ -15,6 +13,7 @@ public class MarketDataConfig {
     public void setHost(String getHost) {
         this.Host = getHost;
     }
+
     public String getToken() {
         String token = System.getenv("TOKEN");
         return token;
@@ -23,7 +22,6 @@ public class MarketDataConfig {
     public void setToken(String getToken) {
         this.Token = getToken;
     }
-
 
 
 }
